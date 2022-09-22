@@ -1,0 +1,17 @@
+- name: update apt package
+  become: true
+  apt:
+    update_cache: yes
+
+- name: upgrade apt package
+  become: true
+  apt:
+    upgrade: yes
+
+- name: install working environment
+  become: true
+  shell: apt install -y nodejs npm
+
+- name: install pm2
+  become: true
+  shell: npm install -g pm2
