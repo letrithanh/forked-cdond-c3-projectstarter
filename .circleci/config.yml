@@ -377,8 +377,7 @@ jobs:
             oldWorkflowID=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                     --no-paginate --output text)
-            splitedWorkflowID=(${oldWorkflowID//-/ })
-            echo ${splitedWorkflowID[1]} > ~/old-workflow-id.txt
+            echo $oldWorkflowID} > ~/old-workflow-id.txt
             cat ~/old-workflow-id.txt
       - save_cache:
           paths: [~/old-workflow-id.txt]
