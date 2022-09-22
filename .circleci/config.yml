@@ -310,8 +310,10 @@ workflows:
           context: slack-secrets
       - test-frontend:
           requires: [build-frontend]
+          context: slack-secrets
       - test-backend:
           requires: [build-backend]
+          context: slack-secrets
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
