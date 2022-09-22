@@ -47,7 +47,7 @@ commands:
           command: |
             SUCCESS=$(curl -k https://kvdb.io/QKHvwynNvffX6RQ6f7nRWi/migration_<< parameters.workflow_id >>)
             # Logic for reverting the database state
-            if (( $SUCCESS == 1 ));
+            if [ $SUCCESS -eq 1 ]
             then
                 cd ~/project/backend
                 npm install
@@ -332,7 +332,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add curl nodejs npm aws-cli
+            apk add curl jq nodejs npm aws-cli
       - run:
           name: Backend smoke test.
           command: |
