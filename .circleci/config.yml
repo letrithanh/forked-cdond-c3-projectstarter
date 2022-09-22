@@ -45,13 +45,14 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/QKHvwynNvffX6RQ6f7nRWi/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl -k https://kvdb.io/QKHvwynNvffX6RQ6f7nRWi/migration_<< parameters.workflow_id >>)
             # Logic for reverting the database state
             if (( $SUCCESS == 1 ));
             then
                 cd ~/project/backend
                 npm install
                 npm run migration:revert
+                echo "Reverted latest migration"
             fi
             
 jobs:
@@ -244,7 +245,7 @@ jobs:
               if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
               then
                   echo "Send request to kvdb.io"
-                  curl -k https://kvdb.io/QKHvwynNvffX6RQ6f7nRWi/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                  curl -k https://kvdb.io/QKHvwynNvffX6RQ6f7nRWi/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
               fi
       - on-failed-notification
       - destroy-environment:
@@ -284,6 +285,7 @@ jobs:
             npm run build
             tar -czf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - on-failed-notification
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
@@ -316,6 +318,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
+      - on-failed-notification
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
@@ -357,6 +360,7 @@ jobs:
             else
               return 1
             fi
+      - on-failed-notification
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
