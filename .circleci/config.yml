@@ -51,7 +51,7 @@ commands:
             then
                 cd ~/project/backend
                 npm install
-                npm run migration:revert
+                npm run migrations:revert
                 echo "Reverted latest migration"
             fi
             
