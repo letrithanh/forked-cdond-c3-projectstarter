@@ -345,7 +345,7 @@ jobs:
             curl "${API_URL}/api/status"
             if curl "${API_URL}/api/status" | grep "ok"
             then
-                return 1 # Failed on purpose
+                return 0
             else
                 return 1
             fi
